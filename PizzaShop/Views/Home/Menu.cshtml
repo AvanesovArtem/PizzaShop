@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "Menu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .MenuPage {
+        color: red !important;
+    }
+    h5 {
+        text-decoration: none!important;
+    }
+    #ForSearch {
+        margin-left: 78.5%;
+    }
+ 
+</style>
+
+
+<div class="container">
+
+
+
+    <div class="divPanel page-content">
+
+
+        <!--Edit Main Content Area here-->
+        <div class="row-fluid">
+
+            <div class="span12">
+
+
+
+                <div id="gridArea">
+                    <p id="ForSearch" style="width: 100%">
+                        <label for="SearchProducts" style="display: inline">Найти: </label><input type="text" id="SearchProducts" style="width: 110px"/>
+                    </p>
+
+                    <ul id="tiles">
+
+                        @foreach (var image in @ViewBag.Images)
+                        {
+
+                            <li style="height: 400px !important">
+                                <h5><strong>@image.Name</strong></h5>
+                                <img src=@Url.Content(@image.Absolutepath) alt="Christmas" title="Christmas"/>
+
+
+                                <h6 style="height: 80px !important; overflow: hidden !important">@Url.Content(image.Description)</h6>
+                                <h4> <strong>@image.Price руб</strong></h4>
+                                <p>
+                                    <div id=@image.Id.ToString()>
+                                        @Ajax.ActionLink("Добавить в корзину", "AddToCart", new {id = @image.Id, Controller = "Order"}, new AjaxOptions {UpdateTargetId = @image.Id.ToString()}, new {role = "button", @class = "btn btn-primary btn-xs"})
+                                    </div>
+
+                                </p>
+
+
+
+                            </li>
+
+                        }
+
+
+                    </ul>
+                    <div id="scrolList"></div>
+                </div>
+
+            </div>
+        </div>
+        <!--End Main Content Area here-->
+
+        <div id="footerInnerSeparator"></div>
+    </div>
+
+</div>
+
+@section Footer {
+
+}
+@section scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript">
+$(function () {
+
+
+
+    var page = 0;
+    var _inCallback = false;
+    function loadItems() {
+        if (page > -1 && !_inCallback) {
+            _inCallback = true;
+            page++;
+
+
+            $.ajax({
+                type: 'GET',
+                url: '/Home/Menu/' + page,
+                success: function (data, textstatus) {
+                    if (data != '') {
+                        $("#scrolList").append(data);
+                    }
+                    else {
+                        page = -1;
+                    }
+                    _inCallback = false;
+
+                }
+            });
+        }
+    }
+    // обработка события скроллинга
+    $(window).scroll(function () {
+        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+        
+            loadItems();
+        }
+    });
+})
+</script>
+
+}

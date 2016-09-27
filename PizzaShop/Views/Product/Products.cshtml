@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mod in @ViewBag.Products)
+        {
+            <tr>
+                <td>@mod.Name</td>
+                <td>@mod.Description</td>
+                <td>@mod.Price</td>
+                <td>@Html.ActionLink("Изменить" ,"Edit", new { id = mod.Id })
+                    @Html.ActionLink("Удалить", "Remove", new { id = mod.Id })</td>
+            </tr>
+        }
+
+
+    </tbody>
+</table>
+
+@section Footer {
+
+}
+
+
+
+
